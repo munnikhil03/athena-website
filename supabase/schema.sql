@@ -1,6 +1,8 @@
--- Athena database schema (Phase 1 draft)
+-- Athena database schema (Phase 1/2)
 -- Run this in the Supabase SQL editor after creating your project.
 -- Safe to re-run: uses IF NOT EXISTS / CREATE OR REPLACE where practical.
+-- NOTE: this project has not been deployed anywhere yet, so this file is
+-- still edited in place rather than through migrations.
 
 create extension if not exists postgis;
 create extension if not exists "uuid-ossp";
@@ -54,9 +56,14 @@ create table if not exists cases (
 
   last_known_location geography(point, 4326),
   location_label text,
+  photo_urls text[] default '{}',
 
   contact_preference text,
   special_instructions text,
+
+  -- FOUND-specific fields; left null for other case types
+  found_contained boolean,
+  found_taken_to text,
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -92,7 +99,10 @@ create index if not exists case_events_location_idx on case_events using gist (l
 
 -- ---------------------------------------------------------------------------
 -- case_media: uploaded files, linked to a case and optionally one event
--- (storage_path points into a Supabase Storage bucket, e.g. "case-media")
+-- (storage_path points into the Supabase Storage bucket "case-media")
+-- Not used by the Phase 2 forms yet (they store URLs directly on
+-- pets.photo_urls / cases.photo_urls) - kept for a future structured-media
+-- pass (e.g. per-event photo galleries).
 -- ---------------------------------------------------------------------------
 create table if not exists case_media (
   id uuid primary key default uuid_generate_v4(),
@@ -120,7 +130,15 @@ create table if not exists donations (
 );
 
 -- ---------------------------------------------------------------------------
--- Row Level Security - starter policies.
+-- Row Level Security.
+--
+-- Reporting is anonymous-friendly on purpose: per the concept brief's
+-- "emergency-first UX" principle, nothing should gate someone from filing a
+-- LOST/SEEN/FOUND report, including a login wall. reporter_id / reported_by
+-- are nullable, and inserts are allowed for the public (anon) role as long
+-- as the row doesn't claim to belong to a different signed-in user than the
+-- one making the request.
+--
 -- TODO before Phase 2 ships publicly: decide whether last_known_location /
 -- case_events.location should be fuzzed for public display (see brief
 -- section 12 on privacy). Right now these policies expose exact coordinates
@@ -137,11 +155,17 @@ alter table donations enable row level security;
 create policy "profiles are self-manageable" on profiles
   for all using (auth.uid() = id) with check (auth.uid() = id);
 
+create policy "pets are publicly readable" on pets
+  for select using (true);
+
+create policy "anyone can register a pet on a report" on pets
+  for insert to public with check (owner_id is null or auth.uid() = owner_id);
+
 create policy "open cases are publicly readable" on cases
   for select using (true);
 
-create policy "authenticated users can create cases" on cases
-  for insert to authenticated with check (auth.uid() = reporter_id);
+create policy "anyone can file a report" on cases
+  for insert to public with check (reporter_id is null or auth.uid() = reporter_id);
 
 create policy "reporters can update their own cases" on cases
   for update using (auth.uid() = reporter_id);
@@ -149,11 +173,11 @@ create policy "reporters can update their own cases" on cases
 create policy "case events are publicly readable" on case_events
   for select using (true);
 
-create policy "authenticated users can add case events" on case_events
-  for insert to authenticated with check (auth.uid() = reported_by);
+create policy "anyone can add a case event" on case_events
+  for insert to public with check (reported_by is null or auth.uid() = reported_by);
 
 create policy "case media is publicly readable" on case_media
   for select using (true);
 
-create policy "authenticated users can upload case media" on case_media
-  for insert to authenticated with check (auth.uid() = uploaded_by);
+create policy "anyone can attach case media" on case_media
+  for insert to public with check (uploaded_by is null or auth.uid() = uploaded_by);

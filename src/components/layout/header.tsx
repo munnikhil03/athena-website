@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -12,8 +13,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="font-display text-2xl font-semibold tracking-tight">
-          Athena
+        <Link href="/" aria-label="Athena home">
+          <Logo />
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">

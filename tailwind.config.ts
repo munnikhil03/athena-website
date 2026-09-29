@@ -36,6 +36,10 @@ const config: Config = {
           DEFAULT: "hsl(var(--urgent))",
           foreground: "hsl(var(--urgent-foreground))",
         },
+        found: {
+          DEFAULT: "hsl(var(--found))",
+          foreground: "hsl(var(--found-foreground))",
+        },
       },
       fontFamily: {
         display: ["var(--font-display)"],

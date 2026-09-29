@@ -1,22 +1,16 @@
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import FoundReportForm from "@/components/forms/found-report-form";
 
 export default function ReportFoundPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
-      <Card>
-        <CardHeader>
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">
-            Coming in Phase 2
-          </p>
-          <CardTitle className="mt-2">Report a found pet</CardTitle>
-          <CardDescription className="mt-2">
-            Will capture photos, where/when the animal was found, condition,
-            whether it&apos;s contained, and where it&apos;s been taken, then
-            (eventually) suggest possible matches against open LOST cases.
-            Placeholder for now.
-          </CardDescription>
-        </CardHeader>
-      </Card>
+      <p className="text-sm font-semibold uppercase tracking-wide text-primary">Report a found pet</p>
+      <h1 className="mt-2 font-display text-3xl font-semibold">Help them get home</h1>
+      <p className="mt-2 text-muted-foreground">
+        Thank you for stopping. A few details here will help us find whoever is looking for this animal.
+      </p>
+      <div className="mt-8">
+        <FoundReportForm />
+      </div>
     </div>
   );
 }

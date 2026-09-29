@@ -1,10 +1,11 @@
 import Link from "next/link";
+import { Logo } from "@/components/logo";
 
 export function Footer() {
   return (
     <footer className="border-t border-border">
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-        <p className="font-display text-lg">Athena</p>
+        <Logo />
         <p className="mt-2 max-w-xl text-sm text-muted-foreground">
           Help often exists. The connection is broken. Athena connects it.
         </p>
