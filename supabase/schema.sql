@@ -69,6 +69,12 @@ create table if not exists cases (
   updated_at timestamptz not null default now()
 );
 
+-- Safe to re-run: adds these columns if the table already existed
+-- from an earlier version of this schema.
+alter table cases add column if not exists photo_urls text[] default '{}';
+alter table cases add column if not exists found_contained boolean;
+alter table cases add column if not exists found_taken_to text;
+
 create index if not exists cases_location_idx on cases using gist (last_known_location);
 create index if not exists cases_type_status_idx on cases (type, status);
 
@@ -152,32 +158,42 @@ alter table case_events enable row level security;
 alter table case_media enable row level security;
 alter table donations enable row level security;
 
+drop policy if exists "profiles are self-manageable" on profiles;
 create policy "profiles are self-manageable" on profiles
   for all using (auth.uid() = id) with check (auth.uid() = id);
 
+drop policy if exists "pets are publicly readable" on pets;
 create policy "pets are publicly readable" on pets
   for select using (true);
 
+drop policy if exists "anyone can register a pet on a report" on pets;
 create policy "anyone can register a pet on a report" on pets
   for insert to public with check (owner_id is null or auth.uid() = owner_id);
 
+drop policy if exists "open cases are publicly readable" on cases;
 create policy "open cases are publicly readable" on cases
   for select using (true);
 
+drop policy if exists "anyone can file a report" on cases;
 create policy "anyone can file a report" on cases
   for insert to public with check (reporter_id is null or auth.uid() = reporter_id);
 
+drop policy if exists "reporters can update their own cases" on cases;
 create policy "reporters can update their own cases" on cases
   for update using (auth.uid() = reporter_id);
 
+drop policy if exists "case events are publicly readable" on case_events;
 create policy "case events are publicly readable" on case_events
   for select using (true);
 
+drop policy if exists "anyone can add a case event" on case_events;
 create policy "anyone can add a case event" on case_events
   for insert to public with check (reported_by is null or auth.uid() = reported_by);
 
+drop policy if exists "case media is publicly readable" on case_media;
 create policy "case media is publicly readable" on case_media
   for select using (true);
 
+drop policy if exists "anyone can attach case media" on case_media;
 create policy "anyone can attach case media" on case_media
   for insert to public with check (uploaded_by is null or auth.uid() = uploaded_by);
