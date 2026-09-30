@@ -1,9 +1,13 @@
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
+import { ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { MapLegend } from "@/components/map/map-legend";
+import PhotoGallery from "@/components/case/photo-gallery";
 import { caseToPinRole, eventToPinRole, PIN_ROLE_HEX } from "@/lib/map/pin-colors";
+import { googleMapsUrl } from "@/lib/map/google-maps";
+import { formatWhen } from "@/lib/format";
 import type { CaseMapPin } from "@/components/map/case-map";
 
 const CaseMap = dynamic(() => import("@/components/map/case-map"), {
@@ -31,8 +35,18 @@ const EVENT_TYPE_LABEL: Record<string, string> = {
   note: "Note",
 };
 
-function formatWhen(value: string) {
-  return new Date(value).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
+function GoogleMapsLink({ lat, lng }: { lat: number; lng: number }) {
+  return (
+    <a
+      href={googleMapsUrl(lat, lng)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1 text-sm font-medium text-primary underline underline-offset-2 hover:text-primary/80"
+    >
+      Open in Google Maps
+      <ExternalLink className="h-3.5 w-3.5" />
+    </a>
+  );
 }
 
 export default async function CaseDetailPage({ params }: { params: { id: string } }) {
@@ -47,6 +61,11 @@ export default async function CaseDetailPage({ params }: { params: { id: string 
 
   if (!caseRow) {
     notFound();
+  }
+
+  const eventLocations = new Map<string, { lat: number; lng: number }>();
+  for (const ev of eventPins ?? []) {
+    eventLocations.set(ev.id as string, { lat: ev.lat as number, lng: ev.lng as number });
   }
 
   const pins: CaseMapPin[] = [];
@@ -96,17 +115,16 @@ export default async function CaseDetailPage({ params }: { params: { id: string 
           )}
 
           {Array.isArray(caseRow.photo_urls) && caseRow.photo_urls.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {caseRow.photo_urls.map((url: string) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img key={url} src={url} alt="" className="h-28 w-28 rounded-lg border border-border object-cover" />
-              ))}
-            </div>
+            <PhotoGallery photos={caseRow.photo_urls} thumbClassName="h-28 w-28" />
           )}
 
-          {caseRow.location_label && (
-            <p className="text-sm text-muted-foreground">Near: {caseRow.location_label}</p>
-          )}
+          <div className="space-y-1">
+            {caseRow.location_label && (
+              <p className="text-sm text-muted-foreground">Near: {caseRow.location_label}</p>
+            )}
+            {casePin && <GoogleMapsLink lat={casePin.lat as number} lng={casePin.lng as number} />}
+          </div>
+
           {caseRow.contact_preference && (
             <p className="text-sm text-muted-foreground">Contact: {caseRow.contact_preference}</p>
           )}
@@ -144,6 +162,7 @@ export default async function CaseDetailPage({ params }: { params: { id: string 
             <ol className="space-y-4 border-l border-border pl-4">
               {events.map((event) => {
                 const role = eventToPinRole(event.event_type as string);
+                const loc = eventLocations.get(event.id as string);
                 return (
                   <li key={event.id} className="relative">
                     <span
@@ -156,6 +175,16 @@ export default async function CaseDetailPage({ params }: { params: { id: string 
                     </p>
                     <p className="text-xs text-muted-foreground">{formatWhen(event.occurred_at as string)}</p>
                     {event.description && <p className="mt-1 text-sm">{event.description}</p>}
+                    {Array.isArray(event.photo_urls) && event.photo_urls.length > 0 && (
+                      <div className="mt-2">
+                        <PhotoGallery photos={event.photo_urls} thumbClassName="h-16 w-16" />
+                      </div>
+                    )}
+                    {loc && (
+                      <div className="mt-1">
+                        <GoogleMapsLink lat={loc.lat} lng={loc.lng} />
+                      </div>
+                    )}
                   </li>
                 );
               })}

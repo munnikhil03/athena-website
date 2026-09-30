@@ -25,6 +25,11 @@ export const PIN_ROLE_LABEL: Record<PinRole, string> = {
 
 export const PIN_LEGEND: PinRole[] = ["lost", "sighting", "found", "reunited", "clue"];
 
+// The subset of roles that apply at the case level (as opposed to "clue",
+// which only ever comes from a case_event, never a case itself) - used for
+// the homepage's "open reports by category" table.
+export const CASE_PIN_ROLES: PinRole[] = ["lost", "sighting", "found", "reunited"];
+
 /** Color role for a case pin on the global map, from its type + status. */
 export function caseToPinRole(type: string, status: string): PinRole {
   if (status === "resolved") return "reunited";

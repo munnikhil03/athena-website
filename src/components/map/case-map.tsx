@@ -7,6 +7,7 @@ import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import Link from "next/link";
 import { PIN_ROLE_HEX, PIN_ROLE_LABEL, type PinRole } from "@/lib/map/pin-colors";
+import { googleMapsUrl } from "@/lib/map/google-maps";
 
 // Same fix as location-picker.tsx - react-leaflet's default marker icon
 // points at image paths that don't survive bundling. Not strictly needed
@@ -75,11 +76,21 @@ export default function CaseMap({ pins, height = 420, cluster = true }: CaseMapP
         <p className="font-display text-sm font-semibold">{pin.title}</p>
         <p className="text-xs text-muted-foreground">{PIN_ROLE_LABEL[pin.role]}</p>
         {pin.meta && <p className="text-xs text-muted-foreground">{pin.meta}</p>}
-        {pin.href && (
-          <Link href={pin.href} className="mt-1 inline-block text-xs font-semibold text-primary underline">
-            View case
-          </Link>
-        )}
+        <div className="mt-1 flex flex-col gap-0.5">
+          {pin.href && (
+            <Link href={pin.href} className="text-xs font-semibold text-primary underline">
+              View case
+            </Link>
+          )}
+          <a
+            href={googleMapsUrl(pin.lat, pin.lng)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-semibold text-primary underline"
+          >
+            Open in Google Maps
+          </a>
+        </div>
       </Popup>
     </Marker>
   ));
