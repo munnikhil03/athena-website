@@ -197,3 +197,38 @@ create policy "case media is publicly readable" on case_media
 drop policy if exists "anyone can attach case media" on case_media;
 create policy "anyone can attach case media" on case_media
   for insert to public with check (uploaded_by is null or auth.uid() = uploaded_by);
+
+-- ---------------------------------------------------------------------------
+-- Map views (Phase 3): flatten the PostGIS geography columns into plain
+-- lat/lng numbers so the Supabase JS client can select them directly for
+-- Leaflet, without a raw-SQL/RPC round trip. These read through to the same
+-- rows the public select policies above already expose, so no new access is
+-- granted - they're a convenience projection, not a security boundary.
+-- ---------------------------------------------------------------------------
+create or replace view public.case_pins as
+select
+  c.id,
+  c.type,
+  c.status,
+  c.title,
+  c.created_at,
+  st_y(c.last_known_location::geometry) as lat,
+  st_x(c.last_known_location::geometry) as lng
+from public.cases c
+where c.last_known_location is not null
+  and c.status in ('open', 'resolved');
+
+create or replace view public.case_event_pins as
+select
+  e.id,
+  e.case_id,
+  e.event_type,
+  e.description,
+  e.occurred_at,
+  st_y(e.location::geometry) as lat,
+  st_x(e.location::geometry) as lng
+from public.case_events e
+where e.location is not null;
+
+grant select on public.case_pins to anon, authenticated;
+grant select on public.case_event_pins to anon, authenticated;

@@ -40,6 +40,10 @@ const config: Config = {
           DEFAULT: "hsl(var(--found))",
           foreground: "hsl(var(--found-foreground))",
         },
+        clue: {
+          DEFAULT: "hsl(var(--clue))",
+          foreground: "hsl(var(--clue-foreground))",
+        },
       },
       fontFamily: {
         display: ["var(--font-display)"],

@@ -44,24 +44,27 @@ Tailwind via `tailwind.config.ts`), with a `.dark` override for dark mode
 | `--accent` | `#E5A93D` warm gold | highlights, the paw print, restrained "hope" accent |
 | `--urgent` | `#C94C4C` warm red | reserved almost entirely for genuine urgency (LOST alerts, behavioral flags) |
 | `--found` | `#3D7A57` deep green | reunited / safe states |
+| `--clue` | `#7B5EA7` muted violet | clue / bedding location markers |
 | `--background` | `#FAF7F0` soft cream | page background - never sterile white |
 | `--foreground` | `#263238` deep charcoal | body text |
 
 Rule of thumb: `--urgent` is reserved for things that are actually urgent.
 Using it for anything else dilutes it exactly where it matters most.
 
-### Map pin color semantics (Phase 3, not built yet)
+### Map pin color semantics (Phase 3, live)
 
-The live case map should use color as information, not decoration:
+The live case map (`/map`, and the map on every case page) uses color as
+information, not decoration - implemented in `src/lib/map/pin-colors.ts`:
 
-- Red - LOST
-- Gold/orange - SIGHTING
-- Teal - FOUND PET / unknown owner
-- Green (`--found`) - REUNITED
-- Purple - CLUE / bedding location
+- Red (`--urgent`) - LOST
+- Gold/orange (`--accent`) - SIGHTING
+- Teal (`--primary`) - FOUND PET / unknown owner
+- Green (`--found`) - REUNITED (any case marked `resolved`)
+- Purple (`--clue`) - CLUE / bedding location (from a case's timeline events)
 
 So a panicked owner can read what's happening on the map without opening
-every marker.
+every marker. The `MapLegend` component renders this same legend anywhere
+the map appears.
 
 ## Motion
 

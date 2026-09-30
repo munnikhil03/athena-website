@@ -30,6 +30,9 @@
     --found: 146 33% 36%;
     --found-foreground: 0 0% 100%;
 
+    --clue: 264 29% 51%;
+    --clue-foreground: 0 0% 100%;
+
     --radius: 0.75rem;
   }
 
@@ -59,6 +62,9 @@
 
     --found: 146 30% 45%;
     --found-foreground: 0 0% 100%;
+
+    --clue: 264 32% 62%;
+    --clue-foreground: 200 20% 10%;
   }
 
   * {

@@ -4,6 +4,7 @@ import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
+  { href: "/map", label: "Live Map" },
   { href: "/report/lost", label: "Report Lost" },
   { href: "/report/seen", label: "I Saw a Pet" },
   { href: "/report/found", label: "I Found a Pet" },
