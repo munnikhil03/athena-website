@@ -4,9 +4,13 @@ import HomeContent, { type RecentCase } from "@/components/home/home-content";
 
 export default async function Home() {
   const supabase = createClient();
+  // The case_pins view now includes every status (the Live Map page needs
+  // that for its "include closed" toggle) - the homepage only ever wanted
+  // active reports, so that filter now happens here instead.
   const { data } = await supabase
     .from("case_pins")
     .select("id, type, status, title, created_at")
+    .in("status", ["open", "resolved"])
     .order("created_at", { ascending: false });
 
   const rows = data ?? [];

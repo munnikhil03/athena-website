@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
@@ -37,6 +37,8 @@ interface CaseMapProps {
   pins: CaseMapPin[];
   height?: number;
   cluster?: boolean;
+  /** Pin id to pan/zoom to and pop open, e.g. from a linked list row. */
+  focusId?: string | null;
 }
 
 function pinIcon(role: PinRole) {
@@ -69,9 +71,55 @@ function FitToPins({ pins }: { pins: CaseMapPin[] }) {
   return null;
 }
 
-export default function CaseMap({ pins, height = 420, cluster = true }: CaseMapProps) {
+function FocusPin({
+  focusId,
+  pins,
+  markerRefs,
+  clusterGroupRef,
+}: {
+  focusId?: string | null;
+  pins: CaseMapPin[];
+  markerRefs: React.MutableRefObject<Map<string, L.Marker>>;
+  clusterGroupRef: React.MutableRefObject<L.MarkerClusterGroup | null>;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!focusId) return;
+    const pin = pins.find((p) => p.id === focusId);
+    const marker = markerRefs.current.get(focusId);
+    if (!pin || !marker) return;
+
+    if (clusterGroupRef.current) {
+      // Zooms/pans just far enough to un-cluster this marker, then opens it -
+      // handles the case where the pin someone clicked in the list is
+      // currently hidden inside a cluster bubble.
+      clusterGroupRef.current.zoomToShowLayer(marker, () => marker.openPopup());
+    } else {
+      map.setView([pin.lat, pin.lng], 16);
+      marker.openPopup();
+    }
+    // Re-run every time focusId changes, even to the same id clicked twice.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusId]);
+
+  return null;
+}
+
+export default function CaseMap({ pins, height = 420, cluster = true, focusId = null }: CaseMapProps) {
+  const markerRefs = useRef<Map<string, L.Marker>>(new Map());
+  const clusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
+
   const markers = pins.map((pin) => (
-    <Marker key={pin.id} position={[pin.lat, pin.lng]} icon={pinIcon(pin.role)}>
+    <Marker
+      key={pin.id}
+      position={[pin.lat, pin.lng]}
+      icon={pinIcon(pin.role)}
+      ref={(instance) => {
+        if (instance) markerRefs.current.set(pin.id, instance);
+        else markerRefs.current.delete(pin.id);
+      }}
+    >
       <Popup>
         <p className="font-display text-sm font-semibold">{pin.title}</p>
         <p className="text-xs text-muted-foreground">{PIN_ROLE_LABEL[pin.role]}</p>
@@ -103,7 +151,14 @@ export default function CaseMap({ pins, height = 420, cluster = true }: CaseMapP
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <FitToPins pins={pins} />
-        {cluster ? <MarkerClusterGroup chunkedLoading>{markers}</MarkerClusterGroup> : markers}
+        <FocusPin focusId={focusId} pins={pins} markerRefs={markerRefs} clusterGroupRef={clusterGroupRef} />
+        {cluster ? (
+          <MarkerClusterGroup chunkedLoading ref={clusterGroupRef}>
+            {markers}
+          </MarkerClusterGroup>
+        ) : (
+          markers
+        )}
       </MapContainer>
     </div>
   );

@@ -211,12 +211,16 @@ select
   c.type,
   c.status,
   c.title,
+  c.photo_urls,
   c.created_at,
   st_y(c.last_known_location::geometry) as lat,
   st_x(c.last_known_location::geometry) as lng
 from public.cases c
-where c.last_known_location is not null
-  and c.status in ('open', 'resolved');
+where c.last_known_location is not null;
+-- Note: this now includes every status (including 'closed'). It used to
+-- filter to open/resolved only, but the Live Map page's "include closed
+-- reports" toggle needs the full set - filtering to what's shown by
+-- default now happens client-side instead of in this view.
 
 create or replace view public.case_event_pins as
 select

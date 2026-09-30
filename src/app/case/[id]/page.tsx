@@ -5,9 +5,11 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { MapLegend } from "@/components/map/map-legend";
 import PhotoGallery from "@/components/case/photo-gallery";
+import AddUpdateForm from "@/components/case/add-update-form";
 import { caseToPinRole, eventToPinRole, PIN_ROLE_HEX } from "@/lib/map/pin-colors";
 import { googleMapsUrl } from "@/lib/map/google-maps";
 import { formatWhen } from "@/lib/format";
+import { EVENT_TYPE_LABEL } from "@/lib/case-events";
 import type { CaseMapPin } from "@/components/map/case-map";
 
 const CaseMap = dynamic(() => import("@/components/map/case-map"), {
@@ -20,19 +22,6 @@ const TYPE_LABEL: Record<string, string> = {
   seen: "Sighting reported",
   found: "Found pet",
   help: "Emergency assistance",
-};
-
-const EVENT_TYPE_LABEL: Record<string, string> = {
-  last_known: "Last known location",
-  possible_sighting: "Possible sighting",
-  confirmed_sighting: "Confirmed sighting",
-  tracks_clues: "Tracks / clue found",
-  bedding: "Bedding site found",
-  food_trap_station: "Food / trap station set",
-  accident_origin: "Accident origin",
-  found_contained: "Found & contained",
-  update: "Update",
-  note: "Note",
 };
 
 function GoogleMapsLink({ lat, lng }: { lat: number; lng: number }) {
@@ -195,7 +184,11 @@ export default async function CaseDetailPage({ params }: { params: { id: string 
             </p>
           )}
 
-          <p className="pt-2 text-xs text-muted-foreground">Share this page&apos;s link to keep everyone updated.</p>
+          <div className="pt-2">
+            <AddUpdateForm caseId={caseRow.id} />
+          </div>
+
+          <p className="text-xs text-muted-foreground">Share this page&apos;s link to keep everyone updated.</p>
         </CardContent>
       </Card>
     </div>
