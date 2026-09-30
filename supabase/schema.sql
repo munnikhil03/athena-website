@@ -211,10 +211,10 @@ select
   c.type,
   c.status,
   c.title,
-  c.photo_urls,
   c.created_at,
   st_y(c.last_known_location::geometry) as lat,
-  st_x(c.last_known_location::geometry) as lng
+  st_x(c.last_known_location::geometry) as lng,
+  c.photo_urls
 from public.cases c
 where c.last_known_location is not null;
 -- Note: this now includes every status (including 'closed'). It used to
