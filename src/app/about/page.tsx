@@ -51,9 +51,9 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-border shadow-sm">
+          <div>
             <Image
-              src="/images/athena-story.jpg"
+              src="/images/athena-story.png"
               alt="Illustration of a dog and cat looking toward a sunrise over a mountain path, with the Athena Animal Network name below them"
               width={1079}
               height={720}
