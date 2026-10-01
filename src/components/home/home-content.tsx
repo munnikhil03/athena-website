@@ -7,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardFooter, CardContent }
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CASE_PIN_ROLES, PIN_ROLE_HEX, PIN_ROLE_LABEL, type PinRole } from "@/lib/map/pin-colors";
-import { DogSketch } from "@/components/home/dog-sketch";
+import { PawPrint } from "@/components/home/paw-print";
 import { formatDate } from "@/lib/format";
 
 const fadeUp = {
@@ -122,9 +122,9 @@ export default function HomeContent({ counts, recent }: HomeContentProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
-            className="mx-auto w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-sm"
+            className="mx-auto w-full max-w-sm"
           >
-            <DogSketch className="h-auto w-full" />
+            <PawPrint className="h-auto w-full" />
           </motion.div>
         </div>
       </section>
