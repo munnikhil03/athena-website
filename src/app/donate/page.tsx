@@ -37,7 +37,7 @@ export default function DonatePage() {
   return (
     <div>
       <section className="mx-auto max-w-3xl px-4 pb-10 pt-16 text-center sm:px-6 sm:pt-24">
-        <p className="text-sm font-semibold uppercase tracking-wide text-secondary">
+        <p className="text-base font-semibold uppercase tracking-wide text-[hsl(178,55%,20%)]">
           Support Athena
         </p>
         <h1 className="mt-4 font-display text-4xl font-semibold leading-tight sm:text-5xl">

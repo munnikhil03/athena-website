@@ -38,7 +38,7 @@ export default function AboutPage() {
       <section className="mx-auto max-w-6xl px-4 pb-12 pt-16 sm:px-6 sm:pt-24">
         <div className="grid items-center gap-10 md:grid-cols-2 md:gap-16">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-secondary">
+            <p className="text-base font-semibold uppercase tracking-wide text-[hsl(178,55%,20%)]">
               Our story
             </p>
             <h1 className="mt-4 font-display text-4xl font-semibold leading-tight sm:text-5xl">

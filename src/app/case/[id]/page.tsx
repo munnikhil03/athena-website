@@ -83,7 +83,7 @@ export default async function CaseDetailPage({ params }: { params: { id: string 
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
       <Card>
         <CardHeader>
-          <p className="text-sm font-semibold uppercase tracking-wide text-secondary">
+          <p className="text-base font-semibold uppercase tracking-wide text-[hsl(178,55%,20%)]">
             {TYPE_LABEL[caseRow.type] ?? caseRow.type} · {caseRow.status}
           </p>
           <CardTitle className="mt-2">{caseRow.title}</CardTitle>

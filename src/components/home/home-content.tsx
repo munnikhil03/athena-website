@@ -71,7 +71,7 @@ export default function HomeContent({ counts, recent }: HomeContentProps) {
           initial="hidden"
           animate="show"
           custom={0}
-          className="text-sm font-semibold uppercase tracking-wide text-secondary"
+          className="text-base font-semibold uppercase tracking-wide text-[hsl(178,55%,20%)]"
         >
           Community-powered pet search &amp; rescue
         </motion.p>
@@ -148,7 +148,7 @@ export default function HomeContent({ counts, recent }: HomeContentProps) {
 
       <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
         <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-          <p className="text-sm font-semibold uppercase tracking-wide text-secondary">Live activity</p>
+          <p className="text-base font-semibold uppercase tracking-wide text-[hsl(178,55%,20%)]">Live activity</p>
           <h2 className="mt-2 font-display text-2xl font-semibold sm:text-3xl">
             What&apos;s happening right now
           </h2>
@@ -279,7 +279,7 @@ export default function HomeContent({ counts, recent }: HomeContentProps) {
             whileInView="show"
             viewport={{ once: true }}
           >
-            <p className="text-sm font-semibold uppercase tracking-wide text-[hsl(178,55%,20%)]">
+            <p className="text-base font-semibold uppercase tracking-wide text-[hsl(178,55%,20%)]">
               Why Athena exists
             </p>
             <h2 className="mt-3 font-display text-2xl font-semibold sm:text-3xl">

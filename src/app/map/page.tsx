@@ -21,7 +21,7 @@ export default async function LiveMapPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <p className="text-sm font-semibold uppercase tracking-wide text-primary">Live case map</p>
+      <p className="text-base font-semibold uppercase tracking-wide text-primary">Live case map</p>
       <h1 className="mt-2 font-display text-3xl font-semibold">See what&apos;s happening near you</h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
         Every report on one map, color-coded by what&apos;s happening. Click a pin or a row below for
