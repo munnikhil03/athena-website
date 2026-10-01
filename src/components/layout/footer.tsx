@@ -14,6 +14,7 @@ export function Footer() {
           <Link href="/report/lost" className="hover:text-foreground">Report Lost</Link>
           <Link href="/report/seen" className="hover:text-foreground">I Saw a Pet</Link>
           <Link href="/report/found" className="hover:text-foreground">I Found a Pet</Link>
+          <Link href="/about" className="hover:text-foreground">About</Link>
           <Link href="/donate" className="hover:text-foreground">Donate</Link>
         </div>
 

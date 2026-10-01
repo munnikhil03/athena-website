@@ -12,6 +12,7 @@ const navLinks = [
   { href: "/report/lost", label: "Report Lost" },
   { href: "/report/seen", label: "I Saw a Pet" },
   { href: "/report/found", label: "I Found a Pet" },
+  { href: "/about", label: "About" },
 ];
 
 export function Header() {
