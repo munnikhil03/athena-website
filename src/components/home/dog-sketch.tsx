@@ -9,11 +9,13 @@ interface DogSketchProps {
   className?: string;
 }
 
-// A sitting dog built as a handful of clean, closed silhouette shapes
-// (ear, merged head+snout, body, tail, two legs) rather than a tangle of
-// disconnected curves, so it reads clearly as a dog at any size. On load,
-// each shape "draws itself" in via Framer Motion's pathLength animation;
-// anyone with reduced motion enabled sees it fully drawn immediately.
+// A sitting dog in a continuous-line sketch style: both ears visible, a
+// small nose loop, two front legs, one bent back leg, and a curling tail -
+// an original drawing built in the same style/pose family as reference
+// line-art of a sitting dog, not a trace of any specific artwork. Built
+// from closed silhouette shapes (one merged head+snout path, one body
+// path) so it holds together as a dog rather than a tangle of lines.
+// Verified by rendering it before shipping.
 export function DogSketch({ className }: DogSketchProps) {
   const shouldReduceMotion = useReducedMotion();
   const initial = shouldReduceMotion ? "shown" : "hidden";
@@ -40,14 +42,24 @@ export function DogSketch({ className }: DogSketchProps) {
 
   return (
     <svg viewBox="0 0 400 400" className={className} role="img" aria-label="Line sketch of a sitting dog">
-      {/* ear, behind the head */}
+      {/* far ear, peeking up from behind the skull */}
+      <motion.path
+        {...stroke}
+        d="M272,100 Q302,80 298,62 Q280,78 268,105 Z"
+        variants={draw}
+        initial={initial}
+        animate="shown"
+        custom={0}
+      />
+
+      {/* near ear, draping over the cheek */}
       <motion.path
         {...stroke}
         d="M240,98 Q165,130 195,178 Q222,150 240,98 Z"
         variants={draw}
         initial={initial}
         animate="shown"
-        custom={0}
+        custom={0.15}
       />
 
       {/* head + snout, one merged silhouette */}
@@ -65,7 +77,18 @@ export function DogSketch({ className }: DogSketchProps) {
         variants={draw}
         initial={initial}
         animate="shown"
-        custom={0.15}
+        custom={0.3}
+      />
+
+      {/* nose loop */}
+      <motion.path
+        {...stroke}
+        strokeWidth={3}
+        d="M132,185 C124,180 118,188 126,194 C134,200 142,192 136,186 C134,184 133,184 132,185 Z"
+        variants={draw}
+        initial={initial}
+        animate="shown"
+        custom={0.5}
       />
 
       {/* body */}
@@ -81,81 +104,92 @@ export function DogSketch({ className }: DogSketchProps) {
         variants={draw}
         initial={initial}
         animate="shown"
-        custom={0.4}
+        custom={0.6}
       />
 
-      {/* tail */}
+      {/* tail, curling with a spiral tip */}
       <motion.path
         {...stroke}
-        d="M335,250 C362,245 378,222 370,195"
-        variants={draw}
-        initial={initial}
-        animate="shown"
-        custom={0.65}
-      />
-
-      {/* front leg + paw */}
-      <motion.path
-        {...stroke}
-        d="M213,297 C210,315 207,333 205,349"
-        variants={draw}
-        initial={initial}
-        animate="shown"
-        custom={0.75}
-      />
-      <motion.ellipse
-        {...stroke}
-        cx={198}
-        cy={356}
-        rx={14}
-        ry={8}
-        variants={draw}
-        initial={initial}
-        animate="shown"
-        custom={0.9}
-      />
-
-      {/* back leg + paw */}
-      <motion.path
-        {...stroke}
-        d="M300,314 C304,328 308,340 311,351"
+        d="M335,255 C364,252 384,228 378,198 C375,183 362,175 352,182
+           C364,184 372,195 369,207"
         variants={draw}
         initial={initial}
         animate="shown"
         custom={0.85}
       />
-      <motion.ellipse
+
+      {/* back leg, bent, visible in front of the body */}
+      <motion.path
         {...stroke}
-        cx={316}
-        cy={357}
-        rx={14}
-        ry={8}
+        d="M232,300 C226,318 232,334 252,342 C258,344 263,344 267,343"
         variants={draw}
         initial={initial}
         animate="shown"
         custom={1.0}
       />
+      <motion.ellipse
+        {...stroke}
+        cx={275}
+        cy={347}
+        rx={13}
+        ry={7}
+        transform="rotate(10 275 347)"
+        variants={draw}
+        initial={initial}
+        animate="shown"
+        custom={1.15}
+      />
 
-      {/* eye + nose */}
-      <motion.circle
-        cx={255}
-        cy={130}
-        r={5}
-        fill={TEAL}
+      {/* two front legs, side by side */}
+      <motion.path
+        {...stroke}
+        d="M205,297 C202,315 200,333 198,349"
         variants={draw}
         initial={initial}
         animate="shown"
         custom={1.1}
       />
+      <motion.ellipse
+        {...stroke}
+        cx={192}
+        cy={356}
+        rx={13}
+        ry={8}
+        variants={draw}
+        initial={initial}
+        animate="shown"
+        custom={1.25}
+      />
+      <motion.path
+        {...stroke}
+        d="M225,300 C223,318 221,336 219,351"
+        variants={draw}
+        initial={initial}
+        animate="shown"
+        custom={1.15}
+      />
+      <motion.ellipse
+        {...stroke}
+        cx={214}
+        cy={358}
+        rx={13}
+        ry={8}
+        variants={draw}
+        initial={initial}
+        animate="shown"
+        custom={1.3}
+      />
+
+      {/* eye */}
       <motion.circle
-        cx={138}
-        cy={190}
-        r={6}
+        cx={255}
+        cy={125}
+        r={5}
         fill={TEAL}
         variants={draw}
         initial={initial}
         animate="shown"
-        custom={1.1}
+        custom={1.35}
       />
 
       {/* collar + tag, the one gold accent, right at the neck */}
@@ -168,7 +202,7 @@ export function DogSketch({ className }: DogSketchProps) {
         variants={draw}
         initial={initial}
         animate="shown"
-        custom={1.2}
+        custom={1.4}
       />
       <motion.circle
         cx={258}
@@ -180,14 +214,14 @@ export function DogSketch({ className }: DogSketchProps) {
         variants={draw}
         initial={initial}
         animate="shown"
-        custom={1.35}
+        custom={1.5}
       />
 
       {/* ground line */}
       <motion.line
-        x1={110}
+        x1={100}
         y1={362}
-        x2={390}
+        x2={400}
         y2={362}
         stroke="currentColor"
         className="text-border"
@@ -195,7 +229,7 @@ export function DogSketch({ className }: DogSketchProps) {
         variants={draw}
         initial={initial}
         animate="shown"
-        custom={1.45}
+        custom={1.6}
       />
     </svg>
   );
