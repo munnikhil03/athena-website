@@ -9,11 +9,11 @@ interface DogSketchProps {
   className?: string;
 }
 
-// A hand-drawn-style sitting dog, built from a handful of simple strokes
-// rather than one complex path, so each part reads clearly: head, floppy
-// ear, snout, collar (the one gold accent), back, chest, legs, and tail.
-// On load, every stroke "draws itself" in using Framer Motion's pathLength
-// animation; anyone with reduced-motion enabled just sees it fully drawn.
+// A sitting dog built as a handful of clean, closed silhouette shapes
+// (ear, merged head+snout, body, tail, two legs) rather than a tangle of
+// disconnected curves, so it reads clearly as a dog at any size. On load,
+// each shape "draws itself" in via Framer Motion's pathLength animation;
+// anyone with reduced motion enabled sees it fully drawn immediately.
 export function DogSketch({ className }: DogSketchProps) {
   const shouldReduceMotion = useReducedMotion();
   const initial = shouldReduceMotion ? "shown" : "hidden";
@@ -24,118 +24,111 @@ export function DogSketch({ className }: DogSketchProps) {
       pathLength: 1,
       opacity: 1,
       transition: {
-        pathLength: { delay, duration: 1.1, ease: "easeInOut" },
+        pathLength: { delay, duration: 0.9, ease: "easeInOut" },
         opacity: { delay, duration: 0.2 },
       },
     }),
   };
 
-  const strokeProps = {
+  const stroke = {
     fill: "none" as const,
     stroke: TEAL,
-    strokeWidth: 3.5,
+    strokeWidth: 4,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
   };
 
   return (
-    <svg
-      viewBox="0 0 300 300"
-      className={className}
-      role="img"
-      aria-label="Line sketch of a sitting dog"
-    >
-      {/* ear (behind head, drawn first) */}
+    <svg viewBox="0 0 400 400" className={className} role="img" aria-label="Line sketch of a sitting dog">
+      {/* ear, behind the head */}
       <motion.path
-        {...strokeProps}
-        d="M185,58 C163,66 148,92 157,122 C164,136 180,131 183,114 C188,94 190,75 185,58 Z"
+        {...stroke}
+        d="M240,98 Q165,130 195,178 Q222,150 240,98 Z"
         variants={draw}
         initial={initial}
         animate="shown"
         custom={0}
       />
 
-      {/* back + haunch */}
+      {/* head + snout, one merged silhouette */}
       <motion.path
-        {...strokeProps}
-        d="M223,93 C254,99 270,130 264,166 C261,191 244,211 219,223"
+        {...stroke}
+        d="M255,95
+           C285,98 305,120 305,150
+           C305,172 298,188 290,195
+           C265,205 245,210 230,208
+           C205,206 185,204 175,200
+           C155,195 140,195 135,188
+           C138,178 150,170 165,160
+           C178,145 190,128 200,115
+           C215,100 235,93 255,95 Z"
         variants={draw}
         initial={initial}
         animate="shown"
         custom={0.15}
       />
 
+      {/* body */}
+      <motion.path
+        {...stroke}
+        d="M290,195
+           C325,205 348,235 342,270
+           C338,295 320,312 295,318
+           C260,322 225,315 205,295
+           C192,282 190,265 198,248
+           C205,230 220,215 240,207
+           C255,200 272,196 290,195 Z"
+        variants={draw}
+        initial={initial}
+        animate="shown"
+        custom={0.4}
+      />
+
       {/* tail */}
       <motion.path
-        {...strokeProps}
-        d="M257,161 C275,151 286,130 278,111"
+        {...stroke}
+        d="M335,250 C362,245 378,222 370,195"
         variants={draw}
         initial={initial}
         animate="shown"
-        custom={0.3}
+        custom={0.65}
       />
 
-      {/* head */}
-      <motion.ellipse
-        {...strokeProps}
-        cx={195}
-        cy={90}
-        rx={40}
-        ry={38}
-        variants={draw}
-        initial={initial}
-        animate="shown"
-        custom={0.45}
-      />
-
-      {/* snout */}
-      <motion.ellipse
-        {...strokeProps}
-        cx={151}
-        cy={101}
-        rx={21}
-        ry={15}
-        variants={draw}
-        initial={initial}
-        animate="shown"
-        custom={0.6}
-      />
-
-      {/* chest, down to front leg and paw */}
+      {/* front leg + paw */}
       <motion.path
-        {...strokeProps}
-        d="M165,124 C159,150 157,176 164,201 C162,216 161,231 159,246"
+        {...stroke}
+        d="M213,297 C210,315 207,333 205,349"
         variants={draw}
         initial={initial}
         animate="shown"
         custom={0.75}
       />
       <motion.ellipse
-        {...strokeProps}
-        cx={154}
-        cy={251}
-        rx={12}
-        ry={7}
+        {...stroke}
+        cx={198}
+        cy={356}
+        rx={14}
+        ry={8}
         variants={draw}
         initial={initial}
         animate="shown"
         custom={0.9}
       />
 
-      {/* back leg and paw */}
+      {/* back leg + paw */}
       <motion.path
-        {...strokeProps}
-        d="M219,223 C225,236 222,251 205,259"
+        {...stroke}
+        d="M300,314 C304,328 308,340 311,351"
         variants={draw}
         initial={initial}
         animate="shown"
-        custom={0.9}
+        custom={0.85}
       />
       <motion.ellipse
-        {...strokeProps}
-        cx={200}
-        cy={263}
-        rx={13}
+        {...stroke}
+        cx={316}
+        cy={357}
+        rx={14}
         ry={8}
         variants={draw}
         initial={initial}
@@ -143,11 +136,11 @@ export function DogSketch({ className }: DogSketchProps) {
         custom={1.0}
       />
 
-      {/* eye and nose - small filled dots, same teal */}
+      {/* eye + nose */}
       <motion.circle
-        cx={180}
-        cy={80}
-        r={3}
+        cx={255}
+        cy={130}
+        r={5}
         fill={TEAL}
         variants={draw}
         initial={initial}
@@ -155,9 +148,9 @@ export function DogSketch({ className }: DogSketchProps) {
         custom={1.1}
       />
       <motion.circle
-        cx={131}
-        cy={98}
-        r={4}
+        cx={138}
+        cy={190}
+        r={6}
         fill={TEAL}
         variants={draw}
         initial={initial}
@@ -165,22 +158,22 @@ export function DogSketch({ className }: DogSketchProps) {
         custom={1.1}
       />
 
-      {/* collar + tag - the one gold accent */}
+      {/* collar + tag, the one gold accent, right at the neck */}
       <motion.path
         fill="none"
         stroke={GOLD}
-        strokeWidth={5}
+        strokeWidth={6}
         strokeLinecap="round"
-        d="M165,123 C178,133 198,134 210,123"
+        d="M235,208 C252,218 272,213 288,199"
         variants={draw}
         initial={initial}
         animate="shown"
         custom={1.2}
       />
       <motion.circle
-        cx={186}
-        cy={139}
-        r={5}
+        cx={258}
+        cy={221}
+        r={6}
         fill="none"
         stroke={GOLD}
         strokeWidth={3.5}
@@ -188,6 +181,21 @@ export function DogSketch({ className }: DogSketchProps) {
         initial={initial}
         animate="shown"
         custom={1.35}
+      />
+
+      {/* ground line */}
+      <motion.line
+        x1={110}
+        y1={362}
+        x2={390}
+        y2={362}
+        stroke="currentColor"
+        className="text-border"
+        strokeWidth={2}
+        variants={draw}
+        initial={initial}
+        animate="shown"
+        custom={1.45}
       />
     </svg>
   );
