@@ -279,13 +279,13 @@ export default function HomeContent({ counts, recent }: HomeContentProps) {
             whileInView="show"
             viewport={{ once: true }}
           >
-            <p className="text-sm font-semibold uppercase tracking-wide text-secondary">
+            <p className="text-sm font-semibold uppercase tracking-wide text-[hsl(178,55%,20%)]">
               Why Athena exists
             </p>
             <h2 className="mt-3 font-display text-2xl font-semibold sm:text-3xl">
               Facebook spreads the word. It isn&apos;t built to coordinate the response.
             </h2>
-            <p className="mt-4 text-muted-foreground">
+            <p className="mt-4 text-foreground/80">
               Athena is named for a dog who went missing for days after a highway
               accident. Thousands of people shared her story - but the one comment
               with her exact location didn&apos;t reach an active searcher in time.
