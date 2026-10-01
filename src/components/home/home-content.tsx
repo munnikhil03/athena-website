@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardFooter, CardContent }
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CASE_PIN_ROLES, PIN_ROLE_HEX, PIN_ROLE_LABEL, type PinRole } from "@/lib/map/pin-colors";
+import { DogSketch } from "@/components/home/dog-sketch";
 import { formatDate } from "@/lib/format";
 
 const fadeUp = {
@@ -66,53 +67,66 @@ export default function HomeContent({ counts, recent }: HomeContentProps) {
   return (
     <div>
       <section className="mx-auto max-w-6xl px-4 pb-16 pt-16 sm:px-6 sm:pt-24">
-        <motion.p
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          custom={0}
-          className="text-base font-semibold uppercase tracking-wide text-[hsl(178,55%,20%)]"
-        >
-          Community-powered pet search &amp; rescue
-        </motion.p>
+        <div className="grid items-center gap-10 md:grid-cols-[1.2fr_1fr] md:gap-16">
+          <div>
+            <motion.p
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              custom={0}
+              className="text-base font-semibold uppercase tracking-wide text-[hsl(178,55%,20%)]"
+            >
+              Community-powered pet search &amp; rescue
+            </motion.p>
 
-        <motion.h1
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          custom={1}
-          className="mt-4 max-w-3xl font-display text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl"
-        >
-          Help often exists. The connection is broken.
-        </motion.h1>
+            <motion.h1
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              custom={1}
+              className="mt-4 max-w-3xl font-display text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl"
+            >
+              Help often exists. The connection is broken.
+            </motion.h1>
 
-        <motion.p
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          custom={2}
-          className="mt-6 max-w-2xl text-lg text-muted-foreground"
-        >
-          Athena connects the people who saw a missing dog, the volunteers
-          willing to search, the strangers who found an unknown pet, and the
-          donors willing to give $10 toward emergency care - so nothing gets
-          lost in a scroll of comments while an animal is in danger.
-        </motion.p>
+            <motion.p
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              custom={2}
+              className="mt-6 max-w-2xl text-lg text-muted-foreground"
+            >
+              Athena connects the people who saw a missing dog, the volunteers
+              willing to search, the strangers who found an unknown pet, and the
+              donors willing to give $10 toward emergency care - so nothing gets
+              lost in a scroll of comments while an animal is in danger.
+            </motion.p>
 
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="show"
-          custom={3}
-          className="mt-8 flex flex-wrap gap-3"
-        >
-          <Link href="/report/lost" className={cn(buttonVariants({ variant: "urgent", size: "lg" }))}>
-            Report a Lost Pet
-          </Link>
-          <Link href="/donate" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
-            Support Athena
-          </Link>
-        </motion.div>
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              custom={3}
+              className="mt-8 flex flex-wrap gap-3"
+            >
+              <Link href="/report/lost" className={cn(buttonVariants({ variant: "urgent", size: "lg" }))}>
+                Report a Lost Pet
+              </Link>
+              <Link href="/donate" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
+                Support Athena
+              </Link>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="mx-auto w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-sm"
+          >
+            <DogSketch className="h-auto w-full" />
+          </motion.div>
+        </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
