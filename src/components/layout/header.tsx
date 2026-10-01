@@ -30,7 +30,7 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               {link.label}
             </Link>
@@ -63,7 +63,7 @@ export function Header() {
                 <Link
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="block py-3 text-base font-medium text-foreground"
+                  className="block py-3 text-lg font-medium text-foreground"
                 >
                   {link.label}
                 </Link>
